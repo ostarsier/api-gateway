@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="off">
+
+    <appenders>
+        <RollingFile name="oauth2" fileName="logs/oauth2.log" filePattern="logs/oauth2.log.%d{yyyy-MM-dd}">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout>
+                <Pattern>%d [%-5p] Thread[%t] Column[%l] :%m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <Console name="STDOUT">
+            <PatternLayout pattern="%d [%-5p] Thread[%t] Column[%l] :%m%n"/>
+        </Console>
+
+    </appenders>
+
+    <loggers>
+        <root level="DEBUG">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="oauth2"/>
+        </root>
+    </loggers>
+</configuration>
