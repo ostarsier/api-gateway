@@ -2,7 +2,7 @@ package com.talkingdata.oauth2.conf;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.talkingdata.oauth2.dao.UserDao;
-import com.talkingdata.oauth2.filter.RateLimitFilter;
+import com.talkingdata.oauth2.filter.AccessFilter;
 import com.talkingdata.oauth2.utils.RateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
@@ -60,7 +60,7 @@ public class BeanConfig {
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        RateLimitFilter rateLimitFilter = new RateLimitFilter();
+        AccessFilter rateLimitFilter = new AccessFilter();
         rateLimitFilter.setUserDao(userDao);
         rateLimitFilter.setRateLimiter(rateLimiter);
         registrationBean.setFilter(rateLimitFilter);

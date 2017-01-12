@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @Component
 @Setter
-public class RateLimitFilter implements Filter {
+public class AccessFilter implements Filter {
 
     private RateLimiter rateLimiter;
     private UserDao userDao;
