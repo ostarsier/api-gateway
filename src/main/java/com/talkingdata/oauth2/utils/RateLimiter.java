@@ -2,6 +2,7 @@ package com.talkingdata.oauth2.utils;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
@@ -32,8 +33,6 @@ public class RateLimiter {
 
     public RateLimiter() {
         jedisPool = JedisPoolProvider.getJedisPool();
-//        intervalInMills = 10000;
-//        limit = 3;
         intervalPerPermit = intervalInMills * 1.0 / limit;
     }
 
@@ -60,20 +59,23 @@ public class RateLimiter {
                     currentTokensRemaining = limit;
                 } else {
                     long grantedTokens = (long) (intervalSinceLast / intervalPerPermit);
+                    System.out.println("grantedTokens=" + grantedTokens);
                     currentTokensRemaining = Math.min(grantedTokens + tokenBucket.getTokensRemaining(), limit);
                 }
-
-                tokenBucket.setLastRefillTime(refillTime);
                 assert currentTokensRemaining >= 0;
                 if (currentTokensRemaining == 0) {
                     tokenBucket.setTokensRemaining(currentTokensRemaining);
                     jedis.hmset(key, tokenBucket.toHash());
+                    System.out.println("tokenBucket=" + tokenBucket);
                     return false;
                 } else {
+                    tokenBucket.setLastRefillTime(refillTime);
                     tokenBucket.setTokensRemaining(currentTokensRemaining - 1);
                     jedis.hmset(key, tokenBucket.toHash());
+                    System.out.println("tokenBucket=" + tokenBucket);
                     return true;
                 }
+
             }
         }
     }
@@ -82,6 +84,7 @@ public class RateLimiter {
         return "rate:limiter:" + intervalInMills + ":" + limit + ":" + userId;
     }
 
+    @ToString
     @Getter
     @Setter
     public static class TokenBucket {
@@ -111,16 +114,16 @@ public class RateLimiter {
         RateLimiter rateLimiter = new RateLimiter();
 
         for (int i = 0; i < 3; i++) {
-            boolean yigwoo = rateLimiter.access("yigwoo");
-            System.out.println(yigwoo);
+            boolean root = rateLimiter.access("root");
+            System.out.println(root);
         }
 
-        boolean yigwoo = rateLimiter.access("yigwoo");
-        System.out.println(yigwoo);
+        boolean root = rateLimiter.access("root");
+        System.out.println(root);
 
-        Thread.sleep(7000);
+        Thread.sleep(4000);
+        root = rateLimiter.access("root");
+        System.out.println(root);
 
-        boolean yigwoo1 = rateLimiter.access("yigwoo");
-        System.out.println(yigwoo1);
     }
 }

@@ -58,16 +58,11 @@ public class BeanConfig {
     }
 
     @Bean
-    public FilterRegistrationBean filterRegistrationBean() {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        AccessFilter rateLimitFilter = new AccessFilter();
-        rateLimitFilter.setUserDao(userDao);
-        rateLimitFilter.setRateLimiter(rateLimiter);
-        registrationBean.setFilter(rateLimitFilter);
-        List<String> urlPatterns = new ArrayList<String>();
-        urlPatterns.add("/api/*");
-        registrationBean.setUrlPatterns(urlPatterns);
-        return registrationBean;
+    public AccessFilter accessFilter() {
+        AccessFilter accessFilter = new AccessFilter();
+        accessFilter.setUserDao(userDao);
+        accessFilter.setRateLimiter(rateLimiter);
+        return accessFilter;
     }
 
 }

@@ -20,8 +20,11 @@
         https://github.com/tuanngda/spring-boot-oauth2-demo
     5、API 调用次数限制实现（令牌桶、redis）
         https://zhuanlan.zhihu.com/p/20872901
+
     6、Spring Cloud构建微服务架构（一）服务注册与发现
         http://blog.didispace.com/springcloud1/
+    7、Spring Cloud构建微服务架构（五）服务网关（zuul路由、eureka服务发现）
+        http://blog.didispace.com/springcloud5/
 
 用户相关
     DaoAuthenticationProvider
