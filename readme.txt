@@ -22,8 +22,6 @@
         https://zhuanlan.zhihu.com/p/20872901
     6、Spring Cloud构建微服务架构（一）服务注册与发现
         http://blog.didispace.com/springcloud1/
-    7、How to implement rate limiting based on a client token in Spring?
-        http://stackoverflow.com/questions/10183168/how-to-implement-rate-limiting-based-on-a-client-token-in-spring
 
 用户相关
     DaoAuthenticationProvider

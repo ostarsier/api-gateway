@@ -3,6 +3,7 @@ package com.talkingdata.oauth2.conf;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.talkingdata.oauth2.dao.UserDao;
 import com.talkingdata.oauth2.filter.RateLimitFilter;
+import com.talkingdata.oauth2.utils.RateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,9 @@ public class BeanConfig {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private RateLimiter rateLimiter;
 
     @Bean
     public JdbcTemplate jdbcTemplate() throws Exception {
@@ -58,6 +62,7 @@ public class BeanConfig {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         RateLimitFilter rateLimitFilter = new RateLimitFilter();
         rateLimitFilter.setUserDao(userDao);
+        rateLimitFilter.setRateLimiter(rateLimiter);
         registrationBean.setFilter(rateLimitFilter);
         List<String> urlPatterns = new ArrayList<String>();
         urlPatterns.add("/api/*");

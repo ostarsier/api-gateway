@@ -2,6 +2,9 @@ package com.talkingdata.oauth2.filter;
 
 
 import com.talkingdata.oauth2.dao.UserDao;
+import com.talkingdata.oauth2.utils.RateLimiter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Component
-public class RateLimitFilter extends HttpServlet implements Filter {
+@Setter
+public class RateLimitFilter implements Filter {
 
+    private RateLimiter rateLimiter;
     private UserDao userDao;
-
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -23,16 +27,17 @@ public class RateLimitFilter extends HttpServlet implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
         try {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             String auth = httpRequest.getHeader("Authorization");
             String accessToken = auth.split(" ")[1];
             String username = userDao.loadUsernameByToken(accessToken);
-            System.out.println("username=" + username);
+            if (!rateLimiter.access(username)) {
+                throw new AccessDeniedException("The times of usage is limited");
+            }
             chain.doFilter(request, response);
         } catch (Exception e) {
-            throw new AccessDeniedException("The times of usage is limited");
+            throw new AccessDeniedException(e.getMessage(), e);
         }
 
     }
@@ -42,7 +47,4 @@ public class RateLimitFilter extends HttpServlet implements Filter {
 
     }
 
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
 }

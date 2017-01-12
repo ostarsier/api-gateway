@@ -18,7 +18,7 @@ public class Test {
         System.out.println("access_token=" + access_token);
 
         //2、访问url
-        String resource = "http://localhost:8080/test";
+        String resource = "http://localhost:8080/api/test";
         HttpResponse<String> response2 = Unirest.get(resource)
                 .header("Authorization", "Bearer " + access_token).asString();
         System.out.println("response=" + response2.getBody());
